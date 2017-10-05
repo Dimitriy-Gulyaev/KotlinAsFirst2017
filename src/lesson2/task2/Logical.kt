@@ -38,8 +38,8 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = TODO()
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
-    if (sqrt(sqr(x2 - x1) + sqr(y2 - y1)) + r1 <= r2) true
-else false
+    (sqrt(sqr(x2 - x1) + sqr(y2 - y1)) + r1 <= r2)
+
 /**
  * Средняя
  *
@@ -50,8 +50,6 @@ else false
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
-    if ((a <= r && b <= s) || (a <= s && b <= r)
-    || (a <= r && c <= s) || (a <= s && c <= r)
-    || (b <= r && c <= s) || (b <= s && c <= r)) true
-    else false
-
+    ((a <= r) && ((b <= s) || (c <= s))
+           || (b <= r) && ((a <= s) || (c <= s))
+              || (c <= r) && ((a <= s) || (b <= s)))

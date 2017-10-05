@@ -9,7 +9,7 @@ package lesson3.task1
 fun factorial(n: Int): Double {
     var result = 1.0
     for (i in 1..n) {
-        result = result * i // Please do not fix in master
+        result *= i // Please do not fix in master
     }
     return result
 }
@@ -160,7 +160,33 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int  {
+    var p = 0 /** счетчик позиции */
+    var c = 0 /** счетчик числа */
+    var l = 1 /** переменая, в которую заисывается кол-во разрядов числа */
+    var k = 1 /** квадрат числа */
+    var r = 10 /** переменная для подсчета разрядов */
+    while (p < n) {
+        r = 10
+        l = 1
+        c++
+        k = c * c
+        while ((k / r) > 0) { /** вычисляем кол-во разрядов (добавляемых позиций) */
+            r *= 10
+            l++
+        }
+        p = p + l
+    }
+    var digit = k /** если квадрат имеет одну цифру, попадаем сразу (частный случай) */
+    p = p - l /** для больинства случаев определяем позицию цифры */
+    r /= 10 /** попадаем в старший разряд */
+    while (p != n) {
+        digit = (k / r) % 10 /** уменьшаем разряды до разряда нужной цифры */
+        r /= 10
+        p++
+    }
+    return (digit)
+}
 
 /**
  * Сложная
