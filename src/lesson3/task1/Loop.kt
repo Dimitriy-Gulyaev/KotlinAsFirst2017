@@ -167,8 +167,8 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
 fun squareSequenceDigit(n: Int): Int  {
     var p = 0 /** счетчик позиции */
     var c = 0 /** счетчик числа */
-    var l = 1 /** переменая, в которую заисывается кол-во разрядов числа */
-    var k = 1 /** квадрат числа */
+    var l = 0 /** переменая, в которую заисывается кол-во разрядов числа */
+    var k = 0 /** квадрат числа */
     var r = 10 /** переменная для подсчета разрядов */
     while (p < n) {
         r = 10
@@ -203,8 +203,8 @@ fun squareSequenceDigit(n: Int): Int  {
 fun fibSequenceDigit(n: Int): Int  {
     var p = 0 /** всё по аналогии с предыдущей фунцией, нахождение квадрата зааменено на функцию фибоначчи */
     var c = 0
-    var l = 1
-    var k = 1
+    var l = 0
+    var k = 0
     var r = 10
         while (p < n) {
             r = 10
