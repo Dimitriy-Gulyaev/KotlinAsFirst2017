@@ -69,8 +69,7 @@ fun digitNumber(n: Int): Int = TODO()
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int = when (n) {
-    1 -> 1
-    2 -> 1
+    1,2 -> 1
     else -> fib(n - 2) + fib(n - 1)
 }
 
@@ -166,10 +165,10 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  */
 fun squareSequenceDigit(n: Int): Int  {
     var p = 0 /** счетчик позиции */
-    var c = 0 /** счетчик числа */
+    var c : Long = 0 /** счетчик числа */
     var l = 0 /** переменая, в которую заисывается кол-во разрядов числа */
-    var k = 0 /** квадрат числа */
-    var r = 10 /** переменная для подсчета разрядов */
+    var k : Long = 0 /** квадрат числа */
+    var r : Long = 10 /** переменная для подсчета разрядов */
     while (p < n) {
         r = 10
         l = 1
@@ -189,7 +188,7 @@ fun squareSequenceDigit(n: Int): Int  {
         r /= 10
         p++
     }
-    return (digit)
+    return (digit.toInt())
 }
 
 /**
@@ -202,15 +201,15 @@ fun squareSequenceDigit(n: Int): Int  {
  */
 fun fibSequenceDigit(n: Int): Int  {
     var p = 0 /** всё по аналогии с предыдущей фунцией, нахождение квадрата зааменено на функцию фибоначчи */
-    var c = 0
+    var c : Long = 0
     var l = 0
-    var k = 0
-    var r = 10
+    var k : Long = 0
+    var r : Long = 10
         while (p < n) {
             r = 10
             l = 1
             c++
-            k = fib(c)
+            k = fib(c.toInt()).toLong()
             while ((k / r) > 0) {
                 r *= 10
                 l++
@@ -225,5 +224,5 @@ fun fibSequenceDigit(n: Int): Int  {
         r /= 10
         p++
     }
-    return (digit)
+    return (digit.toInt())
 }

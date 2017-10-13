@@ -201,6 +201,7 @@ class Tests {
     fun squareSequenceDigit() {
         assertEquals(1, squareSequenceDigit(1))
         assertEquals(4, squareSequenceDigit(2))
+        assertEquals(9, squareSequenceDigit(3))
         assertEquals(5, squareSequenceDigit(7))
         assertEquals(6, squareSequenceDigit(12))
         assertEquals(0, squareSequenceDigit(17))
@@ -208,6 +209,10 @@ class Tests {
         assertEquals(4, squareSequenceDigit(24))
         assertEquals(0,squareSequenceDigit(0))
         assertEquals(5,squareSequenceDigit(33))
+        assertEquals(0, squareSequenceDigit(48))
+        assertEquals(0, squareSequenceDigit(78))
+        assertEquals(1, squareSequenceDigit(113))
+        assertEquals(1, squareSequenceDigit(361128))
     }
 
     @Test
