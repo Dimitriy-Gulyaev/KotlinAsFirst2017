@@ -68,9 +68,20 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int =
-        if (n in 1..2) 1
-            else fib(n - 2) + fib(n - 1)
+fun fib(n: Int): Int {
+    var x1 = 1
+    var x2 = 1
+    var x3 = x1 + x2
+    if (n in 1..2) return 1
+    else {
+        for (i in 3..n) {
+            x3 = x1 + x2
+            x1 = x2
+            x2 = x3
+        }
+        return x3
+    }
+}
 
 /**
  * Простая
@@ -163,31 +174,31 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int  {
-    var p = 1 /** счетчик позиции */
-    var c = 1 /** счетчик числа */
-    var l = 0 /** счетчик разрядов в числе */
-    var k = 1 /** квадрат числа */
+    var position = 1 /** счетчик позиции */
+    var number = 1 /** счетчик числа */
+    var rank = 0 /** счетчик разрядов в числе */
+    var square = 1 /** квадрат числа */
     var r = 1
-    var kl = 0 /** копия квадрата числа для вычисления кол-ва разрядов */
-    while (p < n) {
-        l=0
-        c++
-        k = c * c
-        kl = k
-        while (kl > 0) { /** вычисляем кол-во разрядов */
-            l++
-            kl /= 10
+    var squareCopy = 0 /** копия квадрата числа для вычисления кол-ва разрядов */
+    while (position < n) {
+        rank=0
+        number++
+        square = number * number
+        squareCopy = square
+        while (squareCopy > 0) { /** вычисляем кол-во разрядов */
+            rank++
+            squareCopy /= 10
         }
-        p += l
+        position += rank
     }
-    if (p != n) {
-        p -= n
-        while (p > 0) {
-            p -= 1
+    if (position != n) {
+        position -= n
+        while (position > 0) {
+            position -= 1
             r *= 10
         }
     }
-    return (k / r) % 10
+    return (square / r) % 10
 }
 
 /**
@@ -199,29 +210,29 @@ fun squareSequenceDigit(n: Int): Int  {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fibSequenceDigit(n: Int): Int  {
-    var p = 1 /** счетчик позиции */
-    var c = 1 /** счетчик числа */
-    var l = 0 /** счетчик разрядов в числе */
-    var k = 1 /** число Фибоначчи */
+    var position = 1 /** счетчик позиции */
+    var number = 1 /** счетчик числа */
+    var rank = 0 /** счетчик разрядов в числе */
+    var fib = 1 /** квадрат числа */
     var r = 1
-    var kl = 0 /** копия квадрата числа для вычисления кол-ва разрядов */
-    while (p < n) {
-        l=0
-        c++
-        k = fib(c)
-        kl = k
-        while (kl > 0) { /** вычисляем кол-во разрядов */
-            l++
-            kl /= 10
+    var fibCopy = 0 /** копия числа Фибоначчи для вычисления кол-ва разрядов */
+    while (position < n) {
+        rank=0
+        number++
+        fib = fib(number)
+        fibCopy = fib
+        while (fibCopy > 0) { /** вычисляем кол-во разрядов */
+            rank++
+            fibCopy /= 10
         }
-        p += l
+        position += rank
     }
-    if (p != n) {
-        p -= n
-        while (p > 0) {
-            p -= 1
+    if (position != n) {
+        position -= n
+        while (position > 0) {
+            position -= 1
             r *= 10
         }
     }
-    return (k / r) % 10
+    return (fib / r) % 10
 }
