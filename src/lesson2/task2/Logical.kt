@@ -52,8 +52,8 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     val minimum = min(min(a,b), min(b,c))
     var average = a
-    if (b > minimum && b < average) average = b
-    if (c > minimum && c < average) average = c
+    if (b > minimum && b < max(a,c)) average = b
+    if (c > minimum && c < max(a,b)) average = c
     return (minimum <= r && minimum <= s && (average <= r || average <= s))
 }
 

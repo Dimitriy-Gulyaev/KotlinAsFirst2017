@@ -180,7 +180,7 @@ fun factorize(n: Int): List<Int>  {
             number /= divisor
             divisor = 2
         }
-        divisor++
+        else divisor++
     }
     return list
 }
@@ -201,7 +201,7 @@ fun factorizeToString(n: Int): String {
             number /= divisor
             divisor = 2
         }
-        divisor++
+        else divisor++
     }
     return list.joinToString(separator = "*")
 }
@@ -271,7 +271,7 @@ fun russian(n: Int): String {
     val list11_19 = listOf("одиннадцать", "двенадцать", "транадцать", "четырнадцать",
             "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
     val listSecondRank = listOf("десять", "двадцать", "тридцать", "сорок", "пятьдесят",
-            "шестьдесят", "семьдесят", "восемдесят", "девяносто")
+            "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
     val listThirdRank = listOf("сто", "двести", "триста", "четыреста", "пятьсот",
             "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val listFourthRank = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
