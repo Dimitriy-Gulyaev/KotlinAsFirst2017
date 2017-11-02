@@ -50,13 +50,10 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    var min = a
-    var sred = b
-    if (b < min) min = b
-    if (c < min) min = c
-    if (a in min + 1..sred - 1) sred = a
-    if (c in min + 1..sred - 1) sred = c
-    if (min <= r && min <= s && (sred <= r || sred <= s)) return true
-    else return false
+    val minimum = min(min(a,b), min(b,c))
+    var average = a
+    if (b > minimum && b < average) average = b
+    if (c > minimum && c < average) average = c
+    return (minimum <= r && minimum <= s && (average <= r || average <= s))
 }
 
