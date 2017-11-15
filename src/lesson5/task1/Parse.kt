@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
 
+import java.lang.Math.pow
+
 /**
  * Пример
  *
@@ -66,7 +68,14 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
+            "октября", "ноября")
+    return if (parts.size == 3 && parts[1] in months && parts[0].toInt() < 32)
+        String.format("%02d.%02d.%d", parts[0].toInt(), months.indexOf(parts[1]) + 1, parts[2].toInt())
+        else ""
+}
 
 /**
  * Средняя
@@ -89,7 +98,17 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var string = phone
+    for (i in 0..string.length - 1) {
+        if (string[i].toInt() in 0x30..0x39 ||
+                string[i] == '-' || string[i] == '(' || string[i] == ')' ||  string[i] == '+' || string[i] == ' ')
+        else return ""
+    }
+    string = string.filter {it.toInt() in 0x30..0x39}
+    return if ("+" in phone) "+$string"
+    else string
+}
 
 /**
  * Средняя
@@ -101,7 +120,23 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    var number1 = 0
+    var number2 = -1
+    val parts = jumps.split(" ", "-", "%")
+    if (parts == listOf("")) return -1
+        for (i in 0..parts.size - 1) {
+            for (j in 0..parts[i].length-1) {
+                if (parts[i][j].toInt() !in 0x30..0x39) return -1
+                else {
+                    number1 += (parts[i][j].toInt() - 0x30) * pow(10.0, parts[i].length - 1.toDouble() - j).toInt()
+                    if (number1 > number2) number2 = number1
+                }
+            }
+            number1 = 0
+        }
+        return number2
+    }
 
 /**
  * Сложная

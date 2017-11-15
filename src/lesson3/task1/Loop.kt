@@ -184,21 +184,19 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int  {
     var position = 1 /** счетчик позиции */
     var number = 1 /** счетчик числа */
-    var rank = 0 /** счетчик разрядов в числе */
     var square = 1 /** квадрат числа */
-    var r = 1
-    var squareCopy = 0 /** копия квадрата числа для вычисления кол-ва разрядов */
     while (position < n) {
-        rank=0
         number++
         square = number * number
-        squareCopy = square
+        var squareCopy = square /** копия квадрата числа для вычисления кол-ва разрядов */
+        var rank = 0 /** счетчик разрядов в числе */
         while (squareCopy > 0) { /** вычисляем кол-во разрядов */
             rank++
             squareCopy /= 10
         }
         position += rank
     }
+    var r = 1
     if (position != n) {
         position -= n
         while (position > 0) {
@@ -220,21 +218,19 @@ fun squareSequenceDigit(n: Int): Int  {
 fun fibSequenceDigit(n: Int): Int  {
     var position = 1 /** счетчик позиции */
     var number = 1 /** счетчик числа */
-    var rank = 0 /** счетчик разрядов в числе */
     var fib = 1 /** квадрат числа */
-    var r = 1
-    var fibCopy = 0 /** копия числа Фибоначчи для вычисления кол-ва разрядов */
     while (position < n) {
-        rank=0
         number++
         fib = fib(number)
-        fibCopy = fib
+        var fibCopy = fib /** копия числа Фибоначчи для вычисления кол-ва разрядов */
+        var rank = 0 /** счетчик разрядов в числе */
         while (fibCopy > 0) { /** вычисляем кол-во разрядов */
             rank++
             fibCopy /= 10
         }
         position += rank
     }
+    var r = 1
     if (position != n) {
         position -= n
         while (position > 0) {

@@ -125,11 +125,11 @@ fun mean(list: List<Double>): Double = TODO()
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isEmpty())
-    else {
+    if (list.isNotEmpty()) {
         val sredArif = list.sum() / list.size
         for (i in 0..list.size - 1) list[i] -= sredArif
     }
+    else {}
     return list
 }
 /**
@@ -178,7 +178,6 @@ fun factorize(n: Int): List<Int>  {
         if (number % divisor == 0) {
             list += divisor
             number /= divisor
-            divisor = 2
         }
         else divisor++
     }
@@ -191,20 +190,7 @@ fun factorize(n: Int): List<Int>  {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    var divisor = 2
-    var number = n
-    var list = listOf<Int>()
-    while (number > 1) {
-        if (number % divisor == 0) {
-            list += divisor
-            number /= divisor
-            divisor = 2
-        }
-        else divisor++
-    }
-    return list.joinToString(separator = "*")
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -262,11 +248,26 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
+
+fun listConstr(list: MutableList<Int>, lastDig: List<String>, dig11_19: List<String>, secDig: List<String>,
+               firstDig: List<String>) : MutableList<String> {
+    val listResult = mutableListOf<String>()
+    for (i in list.size - 1 downTo 0) {
+        if (list[i] != 0) {
+            when {
+                (i == 0) && (list[1] != 1) -> listResult.add(lastDig[list[i] - 1])
+                (i == 0) && (list[1] == 1) -> listResult.add(dig11_19[list[i] - 1])
+                (i == 1) && (list[1] != 1) -> listResult.add(secDig[list[i] - 1])
+                (i == 1) && (list[1] == 1) && (list[0] == 0) -> listResult.add(firstDig[list[i] - 1])
+                i == 2 -> listResult.add(firstDig[list[i] - 1])
+            }
+        }
+    }
+    return listResult
+}
 fun russian(n: Int): String {
     val listHigh = mutableListOf(0, 0, 0)
     val listLow = mutableListOf(0, 0, 0)
-    val listResult1 = mutableListOf<String>()
-    val listResult2 = mutableListOf<String>()
     val listFirstRank = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val list11_19 = listOf("одиннадцать", "двенадцать", "транадцать", "четырнадцать",
             "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
@@ -292,28 +293,8 @@ fun russian(n: Int): String {
         i++
         lowRank /= 10
     }
-    for (i in listLow.size - 1 downTo 0) {
-        if (listLow[i] != 0) {
-            when {
-                (i == 0) && (listLow[1] != 1) -> listResult1.add(listFirstRank[listLow[i] - 1])
-                (i == 0) && (listLow[1] == 1) -> listResult1.add(list11_19[listLow[i] - 1])
-                (i == 1) && (listLow[1] != 1) -> listResult1.add(listSecondRank[listLow[i] -1])
-                (i == 1) && (listLow[1] == 1) && (listLow[0] == 0) -> listResult1.add(listSecondRank[listLow[i] - 1])
-                i == 2 -> listResult1.add(listThirdRank[listLow[i] - 1])
-            }
-        }
-    }
-    for (i in listHigh.size - 1 downTo 0) {
-        if (listHigh[i] != 0) {
-            when {
-                (i == 0) && (listHigh[1] != 1) -> listResult2.add(listFourthRank[listHigh[i] - 1])
-                (i == 0) && (listHigh[1] == 1) -> listResult2.add(list11_19[listHigh[i] - 1])
-                (i == 1) && (listHigh[1] != 1) -> listResult2.add(listSecondRank[listHigh[i] - 1])
-                (i == 1) && (listHigh[1] == 1) && (listHigh[0] == 0) -> listResult2.add(listSecondRank[listHigh[i] - 1])
-                i == 2 -> listResult2.add(listThirdRank[listHigh[i] - 1])
-            }
-        }
-    }
+    val listResult1 = listConstr(listLow, listFirstRank, list11_19, listSecondRank, listThirdRank)
+    val listResult2 = listConstr(listHigh, listFourthRank, list11_19, listSecondRank, listThirdRank)
     if (n / 1000 > 0) th = when {
         (n / 1000 % 10 in 2..4) && (n / 1000 % 100 !in 12..14) -> " тысячи"
         (n / 1000 % 10 == 1) && (n / 1000 % 100 != 11) -> " тысяча"
