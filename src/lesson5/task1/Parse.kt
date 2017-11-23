@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
 
+import jdk.nashorn.internal.runtime.JSType.isNumber
 import java.lang.Math.pow
 
 /**
@@ -72,9 +73,10 @@ fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
             "октября", "ноября")
-    return if (parts.size == 3 && parts[1] in months && parts[0].toInt() < 32)
-        String.format("%02d.%02d.%d", parts[0].toInt(), months.indexOf(parts[1]) + 1, parts[2].toInt())
-        else ""
+    if (parts.size != 3 || parts[1] !in months) return ""
+    for (element in parts[0]) if (element !in '0'..'9') return ""
+    for (element in parts[2]) if (element !in '0'..'9') return ""
+    return String.format("%02d.%02d.%d", parts[0].toInt(), months.indexOf(parts[1]) + 1, parts[2].toInt())
 }
 
 /**
@@ -99,14 +101,12 @@ fun dateDigitToStr(digital: String): String = TODO()
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    var string = phone
-    for (i in 0..string.length - 1) {
-        if (string[i].toInt() in 0x30..0x39 ||
-                string[i] == '-' || string[i] == '(' || string[i] == ')' ||  string[i] == '+' || string[i] == ' ')
-        else return ""
-    }
-    string = string.filter {it.toInt() in 0x30..0x39}
-    return if ("+" in phone) "+$string"
+    var string = phone.filter{it != ' ' && it != '-'}
+    if ('+' in string && string.lastIndexOf('+', 0) > 0
+            || phone.filter{it == '(' || it == ')'} != "" && phone.filter{it == '(' || it == ')'} != "()") return ""
+    string = string.filter{it != '+' && it != '(' && it != ')'}
+    for (element in string) if (element !in '0'..'9') return ""
+    return if (phone[0] == '+') "+$string"
     else string
 }
 
@@ -121,22 +121,18 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    var number1 = 0
-    var number2 = -1
+    var number = -1
     val parts = jumps.split(" ", "-", "%")
     if (parts == listOf("")) return -1
-        for (i in 0..parts.size - 1) {
-            for (j in 0..parts[i].length-1) {
-                if (parts[i][j].toInt() !in 0x30..0x39) return -1
-                else {
-                    number1 += (parts[i][j].toInt() - 0x30) * pow(10.0, parts[i].length - 1.toDouble() - j).toInt()
-                    if (number1 > number2) number2 = number1
-                }
-            }
-            number1 = 0
-        }
-        return number2
+    try {
+        for (part in parts) if (part == "")
+            else if (part.toInt() > number) number = part.toInt()
     }
+    catch (e: NumberFormatException) {
+        return -1
+    }
+    return number
+}
 
 /**
  * Сложная
@@ -148,7 +144,23 @@ fun bestLongJump(jumps: String): Int {
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    var number = -1
+    var string = ""
+    var parts = jumps.split('%', '-', ' ')
+    parts = parts.filter {it != ""}
+    for (i in 1..parts.size - 1)
+        if (parts[i] == "+") string += parts[i - 1] + " "
+    parts = string.trim().split(' ')
+    try {
+        for (part in parts)
+            if (part.toInt() > number) number = part.toInt()
+    }
+    catch (e: NumberFormatException) {
+        return -1
+    }
+    return number
+}
 
 /**
  * Сложная
@@ -234,4 +246,66 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var list1 = listOf<Int>()
+    var list2 = listOf<Int>()
+    val conveyor = mutableListOf<Int>()
+    var detector = Math.floor(cells / 2.0).toInt()
+    val basicCommands = listOf('>', '<', '+', '-', '[', ']', ' ')
+    for (element in commands)
+        if (element !in basicCommands) throw IllegalArgumentException()
+    if (commands.filter {it == '['}.length != commands.filter {it == ']'}.length) throw IllegalArgumentException()
+    for (i in 0..cells - 1) conveyor.add(0)
+    var k = 0
+    var j: Int
+    for (i in 0..commands.length - 1) {
+        if (commands[i] == '[') {
+            k++
+            list1 += i
+            j = i + 1
+            while (k != 0) {
+                if (j == commands.length) throw IllegalArgumentException()
+                if (commands[j] == ']') {
+                    k--
+                }
+                if (commands[j] == '[') {
+                    k++
+                }
+                j++
+            }
+            list2 += j - 1
+        }
+    }
+    var i = 0
+    var count = 0
+    while (i <= commands.length - 1 && count < limit) {
+        when (commands[i]) {
+            '>' -> {
+                detector += 1
+                if (detector > conveyor.size - 1) throw IllegalStateException()
+                i++
+            }
+            '<' -> {
+                detector -= 1
+                if (detector < 0) throw IllegalStateException()
+                i++
+            }
+            '+' -> {
+                conveyor[detector] += 1
+                i++
+            }
+            '-' -> {
+                conveyor[detector] -= 1
+                i++
+            }
+            '[' -> if (conveyor[detector] == 0) i = list2[list1.indexOf(i)] + 1
+            else i++
+            ']' -> if (conveyor[detector] != 0) i = list1[list2.indexOf(i)] + 1
+            else i++
+            else -> i++
+        }
+        count++
+    }
+    return conveyor
+}
+

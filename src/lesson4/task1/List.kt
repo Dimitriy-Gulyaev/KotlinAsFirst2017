@@ -129,7 +129,6 @@ fun center(list: MutableList<Double>): MutableList<Double> {
         val sredArif = list.sum() / list.size
         for (i in 0..list.size - 1) list[i] -= sredArif
     }
-    else {}
     return list
 }
 /**
@@ -265,6 +264,7 @@ fun listConstr(list: MutableList<Int>, lastDig: List<String>, dig11_19: List<Str
     }
     return listResult
 }
+
 fun russian(n: Int): String {
     val listHigh = mutableListOf(0, 0, 0)
     val listLow = mutableListOf(0, 0, 0)
@@ -296,10 +296,9 @@ fun russian(n: Int): String {
     val listResult1 = listConstr(listLow, listFirstRank, list11_19, listSecondRank, listThirdRank)
     val listResult2 = listConstr(listHigh, listFourthRank, list11_19, listSecondRank, listThirdRank)
     if (n / 1000 > 0) th = when {
-        (n / 1000 % 10 in 2..4) && (n / 1000 % 100 !in 12..14) -> " тысячи"
-        (n / 1000 % 10 == 1) && (n / 1000 % 100 != 11) -> " тысяча"
-        else -> " тысяч"
+        (n / 1000 % 10 in 2..4) && (n / 1000 % 100 !in 12..14) -> "тысячи"
+        (n / 1000 % 10 == 1) && (n / 1000 % 100 != 11) -> "тысяча"
+        else -> "тысяч"
     }
-    if (listResult2.isNotEmpty() && listResult1.isNotEmpty())th += " "
-    return listResult2.joinToString(separator = " ") + th + listResult1.joinToString(separator = " ")
+    return (listResult2 + th + listResult1).joinToString(separator = " ").trim()
 }

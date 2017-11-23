@@ -50,8 +50,14 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val minimum = min(min(a, b), min(b, c))
-    val average = min(min(max(a, b), max(b, c)), max(a, c))
-    return (minimum <= r && minimum <= s && (average <= r || average <= s))
+    val list = mutableListOf(a, b, c)
+    for (i in 1..2)
+        for (j in 0..2 - i)
+            if (list[j] < list[j + 1]) {
+                val t = list[j]
+                list[j] = list[j + 1]
+                list[j + 1] = t
+            }
+    return list[2] <= min(r, s) && list[1] <= max(r, s)
 }
 
