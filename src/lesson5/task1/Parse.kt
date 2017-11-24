@@ -72,7 +72,7 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
-            "октября", "ноября")
+            "октября", "ноября", "декабря")
     if (parts.size != 3 || parts[1] !in months) return ""
     for (element in parts[0]) if (element !in '0'..'9') return ""
     for (element in parts[2]) if (element !in '0'..'9') return ""
@@ -101,13 +101,13 @@ fun dateDigitToStr(digital: String): String = TODO()
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    var string = phone.filter{it != ' ' && it != '-'}
-    if ('+' in string && string.lastIndexOf('+', 0) > 0
-            || phone.filter{it == '(' || it == ')'} != "" && phone.filter{it == '(' || it == ')'} != "()") return ""
-    string = string.filter{it != '+' && it != '(' && it != ')'}
-    for (element in string) if (element !in '0'..'9') return ""
-    return if (phone[0] == '+') "+$string"
-    else string
+return if (phone.matches(Regex("""[ ]*\+?[ ]*[0-9]+[ -]*(\([-0-9 ]+\))?[-0-9 ]+"""))) {
+    if ('+' in phone) "+${phone.filter { it in '0'..'9' }}"
+    else {
+        phone.filter { it in '0'..'9'}
+    }
+}
+    else ""
 }
 
 /**

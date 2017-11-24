@@ -257,7 +257,7 @@ fun listConstr(list: MutableList<Int>, lastDig: List<String>, dig11_19: List<Str
                 (i == 0) && (list[1] != 1) -> listResult.add(lastDig[list[i] - 1])
                 (i == 0) && (list[1] == 1) -> listResult.add(dig11_19[list[i] - 1])
                 (i == 1) && (list[1] != 1) -> listResult.add(secDig[list[i] - 1])
-                (i == 1) && (list[1] == 1) && (list[0] == 0) -> listResult.add(firstDig[list[i] - 1])
+                (i == 1) && (list[1] == 1) && (list[0] == 0) -> listResult.add(secDig[0])
                 i == 2 -> listResult.add(firstDig[list[i] - 1])
             }
         }
