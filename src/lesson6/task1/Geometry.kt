@@ -2,6 +2,8 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.PI
+import java.lang.Math.atan
 
 /**
  * Точка на плоскости
@@ -72,14 +74,16 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = TODO()
+    fun distance(other: Circle): Double = if (center.distance(other.center) > radius + other.radius)
+        center.distance(other.center) - (radius + other.radius)
+    else 0.0
 
     /**
      * Тривиальная
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = TODO()
+    fun contains(p: Point): Boolean =  center.distance(p) <= radius
 }
 
 /**
@@ -99,7 +103,21 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+fun diameter(vararg points: Point): Segment {
+    var max = -1.0
+    var begin = Point(0.0, 0.0)
+    var end = Point(0.0, 0.0)
+    if (points.size < 2) throw IllegalArgumentException()
+    else {
+        for (i in 0..points.size - 1)
+            for (j in i + 1..points.size - 1) if (points[i].distance(points[j]) > max) {
+                max = points[i].distance(points[j])
+                begin = points[i]
+                end = points[j]
+            }
+        return Segment(begin, end)
+    }
+}
 
 /**
  * Простая
@@ -146,7 +164,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line = Line(s.begin,atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)) % PI)
 
 /**
  * Средняя
@@ -179,7 +197,14 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val k1 = (b.y - a.y) / (b.x - a.x)
+    val k2 = (c.y - b.y) / (c.x - b.x)
+    val x = (k2 * (a.x + b.x) + k1 * k2 * (a.y - c.y) - k1 * (b.x + c.x)) / 2 / (k2 - k1)
+    val y = (-1 / k1) * (x - (a.x + b.x) / 2) + (a.y + b.y) / 2
+    val center = Point (x, y)
+    return Circle(center, center.distance(a))
+}
 
 /**
  * Очень сложная
