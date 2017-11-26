@@ -2,8 +2,11 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.abs
 import java.lang.Math.PI
 import java.lang.Math.atan
+import java.lang.Math.cos
+import java.lang.Math.sin
 
 /**
  * Точка на плоскости
@@ -146,7 +149,16 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        val k1 = Math.sin(angle) / Math.cos(angle)
+        val b1 = b / Math.cos(angle)
+        val k2 = Math.sin(other.angle) / Math.cos(other.angle)
+        val b2 = other.b / Math.cos(other.angle)
+        val x = (b1 - b2) / (k2 - k1)
+        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle)) k1 * x + b1
+        else k2 * x + b2
+        return Point(x, y)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -171,14 +183,25 @@ fun lineBySegment(s: Segment): Line = Line(s.begin,atan((s.end.y - s.begin.y) / 
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line {
+    var angle = atan((b.y - a.y) / (b.x - a.x))
+    if (angle >= PI) angle -= PI
+    else if (angle < 0) angle += PI
+    return Line(a, angle)
+}
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    var angle = lineByPoints(a, b). angle + PI / 2
+    if (angle >= PI) angle -= PI
+    else if (angle < 0) angle += PI
+    return Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), angle)
+}
+
 
 /**
  * Средняя
@@ -198,11 +221,14 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val k1 = (b.y - a.y) / (b.x - a.x)
-    val k2 = (c.y - b.y) / (c.x - b.x)
-    val x = (k2 * (a.x + b.x) + k1 * k2 * (a.y - c.y) - k1 * (b.x + c.x)) / 2 / (k2 - k1)
-    val y = (-1 / k1) * (x - (a.x + b.x) / 2) + (a.y + b.y) / 2
-    val center = Point (x, y)
+    var angle1 = atan((b.y - a.y) / (b.x - a.x))
+    if (angle1 >= PI) angle1 -= PI
+    else if (angle1 < 0) angle1 += PI
+    var angle2 = atan((c.y - b.y) / (c.x - b.x))
+    if (angle2 >= PI) angle2 -= PI
+    else if (angle2 < 0) angle2 += PI
+    val center = bisectorByPoints(a, b).
+            crossPoint(bisectorByPoints(b, c))
     return Circle(center, center.distance(a))
 }
 
