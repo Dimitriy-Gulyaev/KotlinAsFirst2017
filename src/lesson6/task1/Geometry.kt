@@ -250,7 +250,7 @@ fun minContainingCircle(vararg points: Point): Circle {
         1 -> return Circle(points[0], 0.0)
         2 -> return circlecByTwoPoints(points[0], points[1])
     }
-    var list = mutableListOf(0)
+    val list = mutableListOf(0)
     var index = 0
     var new = 0
     var max = -1.0
@@ -298,7 +298,7 @@ fun minContainingCircle(vararg points: Point): Circle {
             if (!resCircle.contains(points[mostDist2])) {
                 var spare = 0
                 for (i in 0.until(list.size))
-                    if (list[i] != mostDist2 && list[i] != new) spare = i
+                    if (list[i] != mostDist2 && list[i] != new && list[i] != mostDist1) spare = i
                 list.remove(list[spare])
                 resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
             }
