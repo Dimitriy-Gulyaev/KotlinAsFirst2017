@@ -278,7 +278,17 @@ fun minContainingCircle(vararg points: Point): Circle {
                 mostDist1 = list[i]
             }
         resCircle = circlecByTwoPoints(points[new], points[mostDist1])
-        if (list.size == 2) {
+        if (list.size > 2) {
+            var nearCenter = 0
+            var min = Segment(resCircle.center, points[list[0]]).length()
+            for (i in 0.until(list.size)) {
+                if (Segment(resCircle.center, points[list[i]]).length() < min) {
+                    min = Segment(resCircle.center, points[list[i]]).length()
+                    nearCenter = i
+                }
+            }
+            list.remove(list[nearCenter])
+        }
             val spare = if (list[0] != mostDist1) 0
             else 1
             if (resCircle.contains(points[list[spare]])) list[spare] = new
@@ -286,23 +296,6 @@ fun minContainingCircle(vararg points: Point): Circle {
                 list.add(new)
                 resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
             }
-        }
-        else {
-            max = -1.0
-            var mostDist2 = list[0]
-            for (i in 0.until(list.size))
-                if (Segment(resCircle.center, points[list[i]]).length() > max) {
-                    max = Segment(resCircle.center, points[list[i]]).length()
-                    mostDist2 = list[i]
-                }
-            if (!resCircle.contains(points[mostDist2])) {
-                var spare = 0
-                for (i in 0.until(list.size))
-                    if (list[i] != mostDist2 && list[i] != new && list[i] != mostDist1) spare = i
-                list.remove(list[spare])
-                resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
-            }
-        }
     } while (rad != resCircle.radius)
     return resCircle
 }
