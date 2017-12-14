@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson5.task1
 
 import jdk.nashorn.internal.runtime.JSType.isNumber
@@ -51,12 +52,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -101,13 +100,12 @@ fun dateDigitToStr(digital: String): String = TODO()
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-return if (phone.matches(Regex("""[ ]*\+?[ ]*[0-9]+[ -]*(\([-0-9 ]+\))?[-0-9 ]*"""))) {
-    if ('+' in phone) "+${phone.filter { it in '0'..'9' }}"
-    else {
-        phone.filter { it in '0'..'9'}
-    }
-}
-    else ""
+    return if (phone.matches(Regex("""[ ]*\+?[ ]*[0-9]+[ -]*(\([-0-9 ]+\))?[-0-9 ]*"""))) {
+        if ('+' in phone) "+${phone.filter { it in '0'..'9' }}"
+        else {
+            phone.filter { it in '0'..'9' }
+        }
+    } else ""
 }
 
 /**
@@ -122,13 +120,12 @@ return if (phone.matches(Regex("""[ ]*\+?[ ]*[0-9]+[ -]*(\([-0-9 ]+\))?[-0-9 ]*"
  */
 fun bestLongJump(jumps: String): Int {
     var number = -1
-    val parts = jumps.split(" ", "-", "%")
+    var parts = jumps.split(" ", "-", "%")
     if (parts == listOf("")) return -1
+    parts = parts.filter { it != "" }
     try {
-        for (part in parts) if (part == "")
-            else if (part.toInt() > number) number = part.toInt()
-    }
-    catch (e: NumberFormatException) {
+        for (part in parts) if (part.toInt() > number) number = part.toInt()
+    } catch (e: NumberFormatException) {
         return -1
     }
     return number
@@ -146,17 +143,16 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     var number = -1
-    var string = ""
+    val list = mutableListOf<Int>()
     var parts = jumps.split('%', '-', ' ')
-    parts = parts.filter {it != ""}
-    for (i in 1..parts.size - 1)
-        if (parts[i] == "+") string += parts[i - 1] + " "
-    parts = string.trim().split(' ')
+    parts = parts.filter { it != "" }
+    var i = 0
+    for (i in 1.until(parts.size))
+        if (parts[i] == "+") list.add(parts[i - 1].toInt())
     try {
-        for (part in parts)
-            if (part.toInt() > number) number = part.toInt()
-    }
-    catch (e: NumberFormatException) {
+        for (element in list)
+            if (element > number) number = element
+    } catch (e: NumberFormatException) {
         return -1
     }
     return number
@@ -250,12 +246,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var list1 = listOf<Int>()
     var list2 = listOf<Int>()
     val conveyor = mutableListOf<Int>()
-    var detector = Math.floor(cells / 2.0).toInt()
+    var detector = (cells / 2.0).toInt()
     val basicCommands = listOf('>', '<', '+', '-', '[', ']', ' ')
     for (element in commands)
         if (element !in basicCommands) throw IllegalArgumentException()
-    if (commands.filter {it == '['}.length != commands.filter {it == ']'}.length) throw IllegalArgumentException()
-    for (i in 0..cells - 1) conveyor.add(0)
+    if (commands.filter { it == '[' }.length != commands.filter { it == ']' }.length) throw IllegalArgumentException()
+    for (i in 0.until(cells)) conveyor.add(0)
     var k = 0
     var j: Int
     for (i in 0..commands.length - 1) {

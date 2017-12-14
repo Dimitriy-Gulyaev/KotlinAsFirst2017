@@ -1,12 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson6.task1
 
 import lesson1.task1.sqr
-import java.lang.Math.abs
-import java.lang.Math.PI
-import java.lang.Math.atan
-import java.lang.Math.cos
-import java.lang.Math.sin
+import java.lang.Math.*
 
 /**
  * Точка на плоскости
@@ -34,7 +31,8 @@ class Triangle private constructor(private val points: Set<Point>) {
 
     val c: Point get() = pointList[2]
 
-    constructor(a: Point, b: Point, c: Point): this(linkedSetOf(a, b, c))
+    constructor(a: Point, b: Point, c: Point) : this(linkedSetOf(a, b, c))
+
     /**
      * Пример: полупериметр
      */
@@ -86,13 +84,15 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean =  center.distance(p) <= radius
+    fun contains(p: Point): Boolean = center.distance(p) <= radius
 }
 
 /**
  * Отрезок между двумя точками
  */
 data class Segment(val begin: Point, val end: Point) {
+    fun center(): Point = Point((begin.x + end.x) / 2, (begin.y + end.y) / 2)
+    fun length(): Double = sqrt(sqr(end.x - begin.x) + sqr(end.y - begin.y))
     override fun equals(other: Any?) =
             other is Segment && (begin == other.begin && end == other.end || end == other.begin && begin == other.end)
 
@@ -112,8 +112,8 @@ fun diameter(vararg points: Point): Segment {
     var end = Point(0.0, 0.0)
     if (points.size < 2) throw IllegalArgumentException()
     else {
-        for (i in 0..points.size - 1)
-            for (j in i + 1..points.size - 1) if (points[i].distance(points[j]) > max) {
+        for (i in 0.until(points.size))
+            for (j in (i + 1).until(points.size)) if (points[i].distance(points[j]) > max) {
                 max = points[i].distance(points[j])
                 begin = points[i]
                 end = points[j]
@@ -141,7 +141,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
 
-    constructor(point: Point, angle: Double): this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
+    constructor(point: Point, angle: Double) : this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
 
     /**
      * Средняя
@@ -150,13 +150,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        val k1 = Math.sin(angle) / Math.cos(angle)
-        val b1 = b / Math.cos(angle)
-        val k2 = Math.sin(other.angle) / Math.cos(other.angle)
-        val b2 = other.b / Math.cos(other.angle)
-        val x = (b1 - b2) / (k2 - k1)
-        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle)) k1 * x + b1
-        else k2 * x + b2
+        val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
+        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle)) tan(angle) * x + b / cos(angle)
+        else tan(other.angle) * x + other.b / cos(other.angle)
         return Point(x, y)
     }
 
@@ -176,7 +172,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = Line(s.begin,atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)) % PI)
+fun lineBySegment(s: Segment): Line = Line(s.begin, atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)) % PI)
 
 /**
  * Средняя
@@ -184,7 +180,7 @@ fun lineBySegment(s: Segment): Line = Line(s.begin,atan((s.end.y - s.begin.y) / 
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    var angle = atan((b.y - a.y) / (b.x - a.x))
+    var angle = atan2((b.y - a.y), (b.x - a.x))
     if (angle >= PI) angle -= PI
     else if (angle < 0) angle += PI
     return Line(a, angle)
@@ -196,7 +192,7 @@ fun lineByPoints(a: Point, b: Point): Line {
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
-    var angle = lineByPoints(a, b). angle + PI / 2
+    var angle = lineByPoints(a, b).angle + PI / 2
     if (angle >= PI) angle -= PI
     else if (angle < 0) angle += PI
     return Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), angle)
@@ -243,5 +239,71 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+
+fun circlecByTwoPoints(one: Point, two: Point): Circle =
+        Circle(Segment(one, two).center(), Segment(one, two).length() / 2)
+
+fun minContainingCircle(vararg points: Point): Circle {
+    var resCircle: Circle
+    when (points.size) {
+        0 -> throw IllegalArgumentException()
+        1 -> return Circle(points[0], 0.0)
+        2 -> return circlecByTwoPoints(points[0], points[1])
+    }
+    var list = mutableListOf(0)
+    var index = 0
+    var new = 0
+    var max = -1.0
+    for (i in 1.until(points.size))
+        if (Segment(points[0], points[i]).length() > max) {
+            max = Segment(points[0], points[i]).length()
+            index = i
+        }
+    list.add(index)
+    resCircle = circlecByTwoPoints(points[0], points[list[1]])
+    do {
+        val rad = resCircle.radius
+        max = -1.0
+        for (i in 0.until(points.size))
+            if (Segment(resCircle.center, points[i]).length() > max) {
+                max = Segment(resCircle.center, points[i]).length()
+                new = i
+            }
+        if (resCircle.contains(points[new])) break
+        var mostDist1 = list[0]
+        max = -1.0
+        for (i in 0.until(list.size))
+            if (Segment(points[new], points[list[i]]).length() > max) {
+                max = Segment(points[new], points[list[i]]).length()
+                mostDist1 = list[i]
+            }
+        resCircle = circlecByTwoPoints(points[new], points[mostDist1])
+        if (list.size == 2) {
+            val spare = if (list[0] != mostDist1) 0
+            else 1
+            if (resCircle.contains(points[list[spare]])) list[spare] = new
+            else {
+                list.add(new)
+                resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
+            }
+        }
+        else {
+            max = -1.0
+            var mostDist2 = list[0]
+            for (i in 0.until(list.size))
+                if (Segment(resCircle.center, points[list[i]]).length() > max) {
+                    max = Segment(resCircle.center, points[list[i]]).length()
+                    mostDist2 = list[i]
+                }
+            if (!resCircle.contains(points[mostDist2])) {
+                var spare = 0
+                for (i in 0.until(list.size))
+                    if (list[i] != mostDist2 && list[i] != new) spare = i
+                list.remove(list[spare])
+                resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
+            }
+        }
+    } while (rad == resCircle.radius)
+    return resCircle
+}
 
