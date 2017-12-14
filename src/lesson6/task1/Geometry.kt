@@ -128,7 +128,7 @@ fun diameter(vararg points: Point): Segment {
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle = TODO()
+fun circleByDiameter(diameter: Segment): Circle =  Circle(diameter.center(), diameter.length() / 2)
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
@@ -240,15 +240,12 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  */
 
-fun circlecByTwoPoints(one: Point, two: Point): Circle =
-        Circle(Segment(one, two).center(), Segment(one, two).length() / 2)
-
 fun minContainingCircle(vararg points: Point): Circle {
     var resCircle: Circle
     when (points.size) {
         0 -> throw IllegalArgumentException()
         1 -> return Circle(points[0], 0.0)
-        2 -> return circlecByTwoPoints(points[0], points[1])
+        2 -> return circleByDiameter(Segment(points[0], points[1]))
     }
     val list = mutableListOf(0)
     var index = 0
@@ -260,7 +257,7 @@ fun minContainingCircle(vararg points: Point): Circle {
             index = i
         }
     list.add(index)
-    resCircle = circlecByTwoPoints(points[0], points[list[1]])
+    resCircle = circleByDiameter(Segment(points[0], points[list[1]]))
     do {
         val rad = resCircle.radius
         max = -1.0
@@ -277,7 +274,7 @@ fun minContainingCircle(vararg points: Point): Circle {
                 max = Segment(points[new], points[list[i]]).length()
                 mostDist1 = list[i]
             }
-        resCircle = circlecByTwoPoints(points[new], points[mostDist1])
+        resCircle = circleByDiameter(Segment(points[new], points[mostDist1]))
         if (list.size > 2) {
             var nearCenter = 0
             var min = Segment(resCircle.center, points[list[0]]).length()
