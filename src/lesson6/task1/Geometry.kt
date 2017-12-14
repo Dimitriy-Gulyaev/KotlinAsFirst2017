@@ -303,7 +303,7 @@ fun minContainingCircle(vararg points: Point): Circle {
                 resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
             }
         }
-    } while (rad == resCircle.radius)
+    } while (rad != resCircle.radius)
     return resCircle
 }
 
