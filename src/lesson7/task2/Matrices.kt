@@ -77,7 +77,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
             n++
             result[i, maxW] = n
         }
-        if (n == height * width) break
+        if (n >= height * width) break
         maxW--
         for (i in maxW downTo c) {
             n++
@@ -88,6 +88,7 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
             n++
             result[i, c] = n
         }
+        if (n >= height * width) break
         c++
     }
     return result
@@ -114,9 +115,9 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     var n = 0
     var maxH = height - 1
     var maxW = width - 1
-    val k = if (width > height) height / 2 + 1
-    else width / 2 + 1
-    while (n <= k) {
+    val k = if (width > height) Math.round(height / 2.0)
+    else Math.round(width / 2.0)
+    while (n < k) {
         n++
         for (i in c..maxW) {
             result[r, i] = n
@@ -125,7 +126,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
         for (i in r..maxH) {
             result[i, maxW] = n
         }
-        if (n == height * width) break
+        if (n > k) break
         maxW--
         for (i in maxW downTo c) {
             result[maxH, i] = n
@@ -134,6 +135,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
         for (i in maxH downTo r) {
             result[i, c] = n
         }
+        if (n > k) break
         c++
     }
     return result

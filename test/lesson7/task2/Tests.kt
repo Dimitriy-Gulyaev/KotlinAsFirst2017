@@ -49,6 +49,19 @@ class Tests {
                         listOf(10, 11, 12, 5),
                         listOf(9, 8, 7, 6)
                 )), generateSpiral(3, 4))
+        assertEquals(createMatrix(10, 2,
+                listOf(
+                        listOf(1, 2),
+                        listOf(20,3),
+                        listOf(19, 4),
+                        listOf(18, 5),
+                        listOf(17, 6),
+                        listOf(16, 7),
+                        listOf(15, 8),
+                        listOf(14, 9),
+                        listOf(13, 10),
+                        listOf(12, 11)
+                )), generateSpiral(10, 2))
     }
 
     @Test
@@ -75,6 +88,12 @@ class Tests {
                         listOf(1, 2, 2, 2, 2, 1),
                         listOf(1, 1, 1, 1, 1, 1)
                 )), generateRectangles(5, 6))
+        assertEquals(createMatrix(2, 8,
+                listOf(
+                        listOf(1, 1, 1, 1, 1, 1, 1, 1),
+                        listOf(1, 1, 1, 1, 1, 1, 1, 1)
+
+                )), generateRectangles(2, 8))
 
     }
 
