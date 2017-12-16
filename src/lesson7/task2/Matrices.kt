@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
 import lesson7.task1.Matrix
@@ -59,7 +60,38 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var r = 0
+    var c = 0
+    var n = 0
+    var maxH = height - 1
+    var maxW = width - 1
+    while (n <= height * width) {
+        for (i in c..maxW) {
+            n++
+            result[r, i] = n
+        }
+        r++
+        for (i in r..maxH) {
+            n++
+            result[i, maxW] = n
+        }
+        if (n == height * width) break
+        maxW--
+        for (i in maxW downTo c) {
+            n++
+            result[maxH, i] = n
+        }
+        maxH--
+        for (i in maxH downTo r) {
+            n++
+            result[i, c] = n
+        }
+        c++
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -103,7 +135,14 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    if (matrix.height != matrix.width) throw IllegalArgumentException()
+    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+            result[i, j] = matrix[result.height - 1 - j, i]
+    return result
+}
 
 /**
  * Сложная

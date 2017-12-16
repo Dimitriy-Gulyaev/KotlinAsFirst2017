@@ -251,7 +251,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     for (element in commands)
         if (element !in basicCommands) throw IllegalArgumentException()
     if (commands.filter { it == '[' }.length != commands.filter { it == ']' }.length) throw IllegalArgumentException()
-    for (i in 0.until(cells)) conveyor.add(0)
+    for (i in 0.until cells) conveyor.add(0)
     var k = 0
     var j: Int
     for (i in 0..commands.length - 1) {
