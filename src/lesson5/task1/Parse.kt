@@ -147,7 +147,7 @@ fun bestHighJump(jumps: String): Int {
     var parts = jumps.split('%', '-', ' ')
     parts = parts.filter { it != "" }
     var i = 0
-    for (i in 1.until(parts.size))
+    for (i in 1 until parts.size)
         if (parts[i] == "+") list.add(parts[i - 1].toInt())
     try {
         for (element in list)
@@ -251,7 +251,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     for (element in commands)
         if (element !in basicCommands) throw IllegalArgumentException()
     if (commands.filter { it == '[' }.length != commands.filter { it == ']' }.length) throw IllegalArgumentException()
-    for (i in 0.until cells) conveyor.add(0)
+    for (i in 0 until cells) conveyor.add(0)
     var k = 0
     var j: Int
     for (i in 0..commands.length - 1) {
@@ -295,9 +295,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 i++
             }
             '[' -> if (conveyor[detector] == 0) i = list2[list1.indexOf(i)] + 1
-            else i++
+                else i++
             ']' -> if (conveyor[detector] != 0) i = list1[list2.indexOf(i)] + 1
-            else i++
+                else i++
             else -> i++
         }
         count++

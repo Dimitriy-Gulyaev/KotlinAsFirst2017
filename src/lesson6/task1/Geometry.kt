@@ -111,15 +111,13 @@ fun diameter(vararg points: Point): Segment {
     var begin = Point(0.0, 0.0)
     var end = Point(0.0, 0.0)
     if (points.size < 2) throw IllegalArgumentException()
-    else {
-        for (i in 0.until(points.size))
+        for (i in 0 until points.size)
             for (j in (i + 1).until(points.size)) if (points[i].distance(points[j]) > max) {
                 max = points[i].distance(points[j])
                 begin = points[i]
                 end = points[j]
             }
         return Segment(begin, end)
-    }
 }
 
 /**
