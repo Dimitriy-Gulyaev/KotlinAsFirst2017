@@ -111,13 +111,13 @@ fun diameter(vararg points: Point): Segment {
     var begin = Point(0.0, 0.0)
     var end = Point(0.0, 0.0)
     if (points.size < 2) throw IllegalArgumentException()
-        for (i in 0 until points.size)
-            for (j in (i + 1).until(points.size)) if (points[i].distance(points[j]) > max) {
-                max = points[i].distance(points[j])
-                begin = points[i]
-                end = points[j]
-            }
-        return Segment(begin, end)
+    for (i in 0 until points.size)
+        for (j in (i + 1) until points.size) if (points[i].distance(points[j]) > max) {
+            max = points[i].distance(points[j])
+            begin = points[i]
+            end = points[j]
+        }
+    return Segment(begin, end)
 }
 
 /**
@@ -126,7 +126,7 @@ fun diameter(vararg points: Point): Segment {
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle =  Circle(diameter.center(), diameter.length() / 2)
+fun circleByDiameter(diameter: Segment): Circle = Circle(diameter.center(), diameter.length() / 2)
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
@@ -149,8 +149,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      */
     fun crossPoint(other: Line): Point {
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
-        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle)) tan(angle) * x + b / cos(angle)
-        else tan(other.angle) * x + other.b / cos(other.angle)
+        val y = if (abs(PI / 2 - angle) > abs(PI / 2 - other.angle)) tan(angle) * x +
+                b * (cos(angle) + tan(angle) * sin(angle))
+        else tan(other.angle) * x + other.b * (cos(other.angle) + tan(other.angle) * sin(other.angle))
         return Point(x, y)
     }
 
@@ -215,10 +216,10 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    var angle1 = atan((b.y - a.y) / (b.x - a.x))
+    var angle1 = atan2((b.y - a.y), (b.x - a.x))
     if (angle1 >= PI) angle1 -= PI
     else if (angle1 < 0) angle1 += PI
-    var angle2 = atan((c.y - b.y) / (c.x - b.x))
+    var angle2 = atan2((c.y - b.y), (c.x - b.x))
     if (angle2 >= PI) angle2 -= PI
     else if (angle2 < 0) angle2 += PI
     val center = bisectorByPoints(a, b).
@@ -284,13 +285,13 @@ fun minContainingCircle(vararg points: Point): Circle {
             }
             list.remove(list[nearCenter])
         }
-            val spare = if (list[0] != mostDist1) 0
-            else 1
-            if (resCircle.contains(points[list[spare]])) list[spare] = new
-            else {
-                list.add(new)
-                resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
-            }
+        val spare = if (list[0] != mostDist1) 0
+        else 1
+        if (resCircle.contains(points[list[spare]])) list[spare] = new
+        else {
+            list.add(new)
+            resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
+        }
     } while (rad != resCircle.radius)
     return resCircle
 }
