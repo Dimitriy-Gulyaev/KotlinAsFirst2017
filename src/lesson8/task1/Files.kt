@@ -138,12 +138,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val list = mutableListOf<String>()
     var max = -1
     for (line in File(inputName).readLines()) {
-        val str = line.trim()
+        val str = Regex("""[ ]{2,}""").replace(line, " ").trim()
         if (str.length > max) max = str.length
         list.add(str)
     }
     for (string in list) {
-        val words = string.split(" ").filter { it != "" }
+        val words = string.split(" ")
         if (words.size != 1) {
             val count = (max - string.length) / (words.size - 1)
             var rest = (max - string.length) % (words.size - 1)
@@ -281,60 +281,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    var list = File(inputName).readLines()
-    val writer = File(inputName).bufferedWriter()
-    writer.write("<html><body><p>")
-    var tempo = ""
-    for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
-            writer.write(tempo + "</p>" + "<p>")
-            tempo = ""
-        }
-        else {
-            var str = line
-            var s = "<s>"
-            var index1 = -1
-            var index2 = -1
-            var index3 = -1
-            for (i in 0 until line.length)
-                when (line[i]) {
-                    '~' -> {
-                        str.replace("~~", s)
-                        if (s == "<s>") s = "</s>" else s = "<s>"
-                    }
-                    '*' -> {
-                        if (str[str.indexOf('*') + 1] == '*') {
-                            if (str[str.indexOf('*') + 2] == '*' && index3 == -1) {
-                                index3 = i
-                                str.replace("***", "<b><i>")
-                            } else {
-                                if (index1 != -1 && index2 != -1) {
-                                    if (index1 > index2) str.replace(str.substring(index3 - 2, index3 + 1), "</i></b>")
-                                    else str.replace("***", "</b></i>")
-                                } else str.replace("***", "</i></b>")
-                                if (index2 == -1) index2 = i
-                                else {
-                                    str.replace(str[index2].toString() + str[index2 - 1], "<i>")
-                                    str.replace(str[i - 1].toString() + str[i - 1], "</i>")
-                                    index1 = -1
-                                }
-                            }
-                        } else {
-                            if (index1 == -1) index1 = i
-                            else {
-                                str.replace(str[index1].toString(), "<i>")
-                                str.replace(str[i].toString(), "</i>")
-                                index1 = -1
-                            }
-                        }
-
-                    }
-                }
-            tempo += str
-        }
-    }
-    writer.write(tempo + "</p>" + "</body>" + "</html>")
-    writer.close()
+    TODO()
 }
 
 

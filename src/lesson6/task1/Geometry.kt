@@ -112,7 +112,7 @@ fun diameter(vararg points: Point): Segment {
     var end = Point(0.0, 0.0)
     if (points.size < 2) throw IllegalArgumentException()
     for (i in 0 until points.size)
-        for (j in (i + 1) until points.size) if (points[i].distance(points[j]) > max) {
+        for (j in i + 1 until points.size) if (points[i].distance(points[j]) > max) {
             max = points[i].distance(points[j])
             begin = points[i]
             end = points[j]
@@ -291,6 +291,18 @@ fun minContainingCircle(vararg points: Point): Circle {
         else {
             list.add(new)
             resCircle = circleByThreePoints(points[list[0]], points[list[1]], points[list[2]])
+            var mostDist3 = 0
+            var mostDist4 = 0
+            var max = -1.0
+            for (j in 0..2)
+                for (i in 0 until points.size)
+                    if (Segment(points[i], points[list[j]]).length() > max) {
+                        max = Segment(points[i], points[list[j]]).length()
+                        mostDist3 = i
+                        mostDist4 = j
+                    }
+            var temp = circleByDiameter(Segment(points[mostDist3], points[mostDist4]))
+            if (temp.radius < resCircle.radius && points.all {temp.contains(it)}) resCircle = temp
         }
     } while (rad != resCircle.radius)
     return resCircle
